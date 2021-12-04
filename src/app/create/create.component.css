@@ -1,0 +1,10 @@
+.form-group {
+    padding: 1rem 0 1rem 0;
+}
+input.form-control,
+select.form-control {
+    width: 35%
+}
+.has-error {
+    border: solid red;
+}

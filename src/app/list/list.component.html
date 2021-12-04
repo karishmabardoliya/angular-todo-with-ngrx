@@ -1,0 +1,70 @@
+<div class="container table-responsive py-5">
+  <table class="table table-bordered table-hover">
+    <thead class="thead-dark">
+      <tr class="table-dark">
+        <th scope="col">Date</th>
+        <th scope="col">Task Name</th>
+        <th scope="col">Status</th>
+        <th scope="col">Action</th>
+        <th scope="col">Edit</th>
+        <th scope="col">Delete</th>
+      </tr>
+    </thead>
+    <tbody [formGroup]="taskTableForm">
+      <ng-container *ngIf="taskTableForm.controls.rows && taskTableForm.controls.rows.length > 0">
+        <tr *ngFor="
+            let task of taskTableForm.controls.rows.controls;
+            let i= index;
+          ">
+          <td>
+              <span *ngIf="!task.get('isEdit').value">{{task.get('date').value}}</span>
+              <div *ngIf="task.get('isEdit').value">
+                <input type="date" [formControl]="task.get('date')" value="{{task.get('date').value}}" class="form-control" 
+                [ngClass]="{'has-error': (task.get('date').hasError('required') && task.get('date').touched) && task.invalid}">
+              </div>
+            </td>
+          <td>
+              <span *ngIf="!task.get('isEdit').value">{{task.get('taskName').value}}</span>
+              <div *ngIf="task.get('isEdit').value">
+                  <input type="text" [formControl]="task.get('taskName')" placeholder="Task Name" class="form-control" 
+                    [ngClass]="{'has-error': task.get('taskName').hasError('required') && task.get('taskName').touched && task.invalid}"/>
+              </div>
+            </td>
+          <td>
+              <span *ngIf="!task.get('isEdit').value">{{task.get('status').value}}</span>
+              <div *ngIf="task.get('isEdit').value">
+                  <select name="status" class="form-control" [formControl]="task.get('status')" 
+                        [ngClass]="{'has-error': task.get('status').hasError('required') && task.get('status').touched && task.invalid}">
+                        <option value="" disabled>Choose your status</option>
+                        <option *ngFor="let status of statusList" [ngValue]="status">{{status}}</option>
+                    </select>
+              </div>
+            </td>
+          <td>
+              <span *ngIf="!task.get('isEdit').value">{{task.get('action').value}}</span>
+              <div>
+                  <input *ngIf="task.get('isEdit').value" type="text" [formControl]="task.get('action')" placeholder="Action" class="form-control" 
+                    [ngClass]="{'has-error': task.get('action').hasError('required') && task.get('action').touched && task.invalid}"/>
+              </div>
+            </td>
+          <td class="text-center">
+              <span *ngIf="!task.get('isEdit').value"><i (click)="editTask(task)" class="fa fa-pencil"></i></span>
+              <div *ngIf="task.get('isEdit').value">
+                <button class="btn btn-primary" type="button" (click)="update(task)">Update</button>
+              </div>
+            </td>
+          <td class="text-center"><span (click)="onDelete(i)"><i class="fa fa-trash"></i></span></td>
+        </tr>
+      </ng-container>
+      <ng-container *ngIf="taskTableForm.controls.rows && taskTableForm.controls.rows.length == 0">
+        <tr class="table-active">
+          <td colspan="6" class="text-center">
+            <span><i class="fa fa-info-circle"></i></span> No Results found
+          </td>
+        </tr>
+      </ng-container>
+    </tbody>
+  </table>
+</div>
+<app-create></app-create>
+<router-outlet></router-outlet>
